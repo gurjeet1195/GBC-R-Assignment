@@ -1,0 +1,165 @@
+---
+title: "R- Group 13 Assignment"
+author: Gurjeet Singh, Priyasha Duvedi, Astha Dogra, Shar Spektor, Abhinandan Umakant
+  Jawalekar
+date: "`r Sys.Date()`"
+output: 
+  pdf_document: 
+includes:
+      in_header: header.tex
+---
+
+```{r}
+
+install.packages("r package", repos = "http://cran.us.r-project.org")
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+install.packages("readxl")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("rlang")
+install.packages("dplyr")
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(rlang)
+
+
+library(readxl)
+Esports_Data_Filtered <- read_excel("C:/Users/gurje/OneDrive/Desktop/data/Esports_Data_Filtered.xlsx")
+View(Esports_Data_Filtered)
+
+#R PROGRAMMING
+
+#Structure of the dataset
+str(Esports_Data_Filtered)
+
+#Variables in the dataset
+names(Esports_Data_Filtered)
+
+#Top 15 rows of the dataset
+head(Esports_Data_Filtered, n=15)
+
+
+Total_of_any_three_teams_tournaments = function(x,y,z){x+y+z}
+Total_of_any_three_teams_tournaments(7,5,5)
+
+
+#FILTER ROWS
+newesports = as.data.frame(filter(Esports_Data_Filtered,Esports_Data_Filtered$TotalTournaments > 5))
+
+#RESHAPING 
+
+data.frame1 <- data.frame(
+  Teamname = c("Team Liquid", "ROOT Gaming", "Team Acer"),
+  TotalTournaments = c(808,610,466)
+)
+
+data.frame2 <- data.frame(
+  Teamname = c("Team Liquid", "ROOT Gaming", "Team Acer"),
+  TotalUSDPrize = c(1498925,627435,587934)
+)
+
+Total <- merge(data.frame1,data.frame2, by = "Teamname")
+print(Total)
+
+
+#The following commands cover the Question 7-9 for the Assignment.
+
+
+# The Following command will Omit/Remove the missing values from data set 
+# And create a new data set with omitted values. 
+#Original Data set values will remain unchanged.  
+Esports_Data_Filtered_without_na <- na.omit(Esports_Data_Filtered) 
+View(Esports_Data_Filtered)
+
+#The Following command will identify the rows which have duplicates and will indicate whether the row have duplicates or not. 
+duplicated_rows <- duplicated(Esports_Data_Filtered)
+View(duplicated_rows)
+
+#The following command will remove all the exact duplicates from the data set.
+Esports_Data_Filtered_without_duplicates <- unique(Esports_Data_Filtered)
+View(duplicated_rows)
+
+# The following command will reorder multiple rows in descending order.
+# And will create a new Data set with manipulated data.
+
+Esports_Data_Filtered_sorted_descending <- Esports_Data_Filtered[order(Esports_Data_Filtered$TeamId, decreasing = TRUE), ]
+View(Esports_Data_Filtered_sorted_descending)
+
+#The following commands cover the Question 10-12 for the Assignment.
+
+#The following command will change the column names
+View(Esports_Data_Filtered)
+names(Esports_Data_Filtered)[1]="TeamNumber"
+names(Esports_Data_Filtered)[4]="NumberOfTournamnets"
+names(Esports_Data_Filtered)[4]="NumberOfTournaments"
+
+#The following command will add new column
+#with some mutation
+Esports_Data_Filtered %>% mutate(TournamentsNew=NumberOfTournaments*2)
+install.packages("tidyverse")
+Esports_Data_Filtered %>% mutate(TournamentsNew=NumberOfTournaments*2)
+library("tidyverse")
+Esports_Data_Filtered %>% mutate(TournamentsNew=NumberOfTournaments*2)
+#The following command will generate random set of numbers
+set.seed(1234)
+Esports_Data_Filtered %>% sample_frac(0.75,replace = FALSE)
+Esports_Data_Filtered_new=as.data.frame(Esports_Data_Filtered %>% sample_frac(0.75,replace = FALSE))
+
+
+#The following commands cover the Question 13-14 for the Assignment.
+
+#The following command is used for summary stat of the data.
+summary(Esports_Data_Filtered)
+
+# For statistical functions, used na.rm - TRUE to avoid NA values from affecting the results
+mean(Esports_Data_Filtered$TotalUSDPrize,na.rm = TRUE)
+median(Esports_Data_Filtered$TotalUSDPrize, na.rm = TRUE)
+
+#For mode, create a user defined function since standard function doesn't work
+#Used a library modeest for mode calculation
+mymode = function(x){
+  library(modeest)
+  mode = mfv(x,na_rm = TRUE)
+  print(mode)
+}
+mymode(Esports_Data_Filtered$TotalTournaments)
+view(Esports_Data_Filtered$NumberOfTournaments)
+#The following command will show the range.
+range(Esports_Data_Filtered$TotalTournaments,na.rm = TRUE)
+
+
+view(Esports_Data_Filtered)
+#The following commands cover the Question 15-17 for the Assignment.
+
+# The following code will Plot a scatter plot for any 2 variables in data set
+Esports_Data_Filtered
+
+x<-Esports_Data_Filtered$TotalUSDPrize
+y<-Esports_Data_Filtered$NumberOfTournaments
+ggplot(data.frame(x,y), aes(x=x,y=y))+ geom_point()
+
+
+# The Following command will Plot a bar plot for any 2 variables in data set
+
+Esports_Data_Filtered
+agg_data <- as.data.frame(aggregate(TotalUSDPrize ~ TeamNumber, data = Esports_Data_Filtered, sum))
+barplot(agg_data$TotalUSDPrize ~ agg_data$TeamNumber, 
+        xlab = "TeamNumber", 
+        ylab = "Total USD Prize", 
+        main = "Bar Plot of Total USD Prize by TeamNumber",
+        col = c("red", "blue","green"))
+
+
+# The Following command will find the correlation between 2 variables via linear regression model
+view(Esports_Data_Filtered)
+
+Esports_Data_Filtered
+plot(Esports_Data_Filtered$TotalUSDPrize, Esports_Data_Filtered$NumberOfTournaments)
+model <- lm(NumberOfTournaments ~ TotalUSDPrize, data = Esports_Data_Filtered)
+summary(model)
+abline(model, col = "red")
+
+
+
+```
